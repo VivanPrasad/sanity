@@ -1,0 +1,43 @@
+[gd_resource type="AudioBusLayout" load_steps=4 format=3 uid="uid://d4a558kqoxvv2"]
+
+[sub_resource type="AudioEffectEQ" id="AudioEffectEQ_y1gp1"]
+resource_name = "EQ"
+
+[sub_resource type="AudioEffectFilter" id="AudioEffectFilter_y1gp1"]
+resource_name = "Filter"
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_y1gp1"]
+resource_name = "Reverb"
+dry = 0.5
+
+[resource]
+bus/1/name = &"BGM"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.00504494
+bus/1/send = &"Master"
+bus/1/effect/0/effect = SubResource("AudioEffectEQ_y1gp1")
+bus/1/effect/0/enabled = true
+bus/2/name = &"BGM2"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = 0.00504494
+bus/2/send = &"Master"
+bus/2/effect/0/effect = SubResource("AudioEffectFilter_y1gp1")
+bus/2/effect/0/enabled = true
+bus/3/name = &"SFX"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = &"Master"
+bus/4/name = &"AMB"
+bus/4/solo = false
+bus/4/mute = false
+bus/4/bypass_fx = false
+bus/4/volume_db = 0.0
+bus/4/send = &"Master"
+bus/4/effect/0/effect = SubResource("AudioEffectReverb_y1gp1")
+bus/4/effect/0/enabled = true

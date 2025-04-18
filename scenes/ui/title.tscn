@@ -1,0 +1,137 @@
+[gd_scene load_steps=6 format=3 uid="uid://c3qqd1lg225pv"]
+
+[ext_resource type="Script" uid="uid://bwc8froqqhjt0" path="res://scripts/ui/title.gd" id="1_s1drf"]
+[ext_resource type="Texture2D" uid="uid://cdi7shmro7mo" path="res://assets/ui/title_logo.png" id="1_t6us6"]
+[ext_resource type="Texture2D" uid="uid://dnhdyty8nhij6" path="res://data/particles/texture.tres" id="3_ve8eu"]
+[ext_resource type="Material" uid="uid://bkinvgfdfdlmj" path="res://data/particles/process_material.tres" id="4_yo48d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ve8eu"]
+font_size = 48
+
+[node name="Title" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s1drf")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+tabs_visible = false
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="TabContainer"]
+position = Vector2(520, 720)
+amount = 50
+texture = ExtResource("3_ve8eu")
+lifetime = 2.2
+randomness = 0.1
+fixed_fps = 60
+process_material = ExtResource("4_yo48d")
+
+[node name="Main" type="TabBar" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Main"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLogo" type="TextureRect" parent="TabContainer/Main/MarginContainer/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_t6us6")
+stretch_mode = 3
+
+[node name="Buttons" type="VBoxContainer" parent="TabContainer/Main/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/separation = 16
+
+[node name="NewGame" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+disabled = true
+text = "New Game"
+
+[node name="Multiplayer" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Multiplayer"
+
+[node name="Config" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Config"
+
+[node name="Exit" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Exit"
+
+[node name="NewGame" type="TabBar" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Multiplayer" type="TabBar" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Multiplayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Multiplayer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Multiplayer"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Buttons" type="VBoxContainer" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Back" type="Button" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Back"
+
+[node name="Config" type="TabBar" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
