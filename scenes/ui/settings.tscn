@@ -1,0 +1,301 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqykohmrm6728"]
+
+[ext_resource type="Script" uid="uid://blqc2ls6ygf0r" path="res://scripts/ui/settings.gd" id="1_8wfqe"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ve8eu"]
+font_size = 48
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8wfqe")
+metadata/_tab_index = 4
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -285.0
+offset_right = 390.0
+offset_bottom = 285.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Settings"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="SettingsTabs" type="TabContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 2
+tab_focus_mode = 0
+
+[node name="Audio" type="MarginContainer" parent="VBoxContainer/SettingsTabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabs/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Master"
+
+[node name="Master" type="HSlider" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "100%"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="BGM" type="HSlider" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "100%"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Sound Effects"
+
+[node name="SFX" type="HSlider" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "100%"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Ambience"
+
+[node name="AMB" type="HSlider" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/SettingsTabs/Audio/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "100%"
+
+[node name="Controls" type="MarginContainer" parent="VBoxContainer/SettingsTabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabs/Controls"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Controls/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Input Type:"
+
+[node name="InputType" type="OptionButton" parent="VBoxContainer/SettingsTabs/Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+selected = 0
+item_count = 3
+popup/item_0/text = "Mouse"
+popup/item_0/id = 0
+popup/item_1/text = "Keyboard"
+popup/item_1/id = 1
+popup/item_1/disabled = true
+popup/item_2/text = "Controller"
+popup/item_2/id = 2
+popup/item_2/disabled = true
+
+[node name="Display" type="MarginContainer" parent="VBoxContainer/SettingsTabs"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+metadata/_tab_index = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabs/Display"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Window Mode:"
+
+[node name="WindowMode" type="OptionButton" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+selected = 0
+item_count = 4
+popup/item_0/text = "Windowed"
+popup/item_0/id = 0
+popup/item_1/text = "Maximized"
+popup/item_1/id = 2
+popup/item_2/text = "Fullscreen"
+popup/item_2/id = 3
+popup/item_3/text = "Exclusive Fullscreen"
+popup/item_3/id = 4
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Resolution:"
+
+[node name="Resolution" type="OptionButton" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+disabled = true
+selected = 0
+item_count = 1
+popup/item_0/text = "1280 x 720"
+popup/item_0/id = 0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Max FPS:"
+
+[node name="FPS" type="OptionButton" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 0
+selected = 7
+item_count = 8
+popup/item_0/text = "30"
+popup/item_0/id = 30
+popup/item_0/disabled = true
+popup/item_1/text = "50"
+popup/item_1/id = 50
+popup/item_1/disabled = true
+popup/item_2/text = "60"
+popup/item_2/id = 60
+popup/item_2/disabled = true
+popup/item_3/text = "70"
+popup/item_3/id = 70
+popup/item_4/text = "90"
+popup/item_4/id = 90
+popup/item_5/text = "120"
+popup/item_5/id = 120
+popup/item_6/text = "144"
+popup/item_6/id = 144
+popup/item_7/text = "Unlimited"
+popup/item_7/id = 0
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Quality"
+
+[node name="Quality" type="OptionButton" parent="VBoxContainer/SettingsTabs/Display/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 0
+selected = 1
+item_count = 2
+popup/item_0/text = "Low"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "Normal"
+popup/item_1/id = 1
+
+[node name="Save Data" type="MarginContainer" parent="VBoxContainer/SettingsTabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+metadata/_tab_index = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabs/Save Data"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Save" type="Button" parent="VBoxContainer/HBoxContainer"]
+modulate = Color(0.8, 1, 0.8, 1)
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Save"
+
+[node name="Back" type="Button" parent="VBoxContainer/HBoxContainer"]
+modulate = Color(1, 0.8, 0.8, 1)
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Cancel"

@@ -1,7 +1,95 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dub4oeheyp54p"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://dub4oeheyp54p"]
 
 [ext_resource type="FontFile" uid="uid://bty8q24r5o3ug" path="res://assets/fonts/chapbook.otf" id="1_siivo"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xtje4"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo7gp"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pbhmp"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 8.0
+bg_color = Color(0.3, 0.225, 0.225, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_siivo"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 8.0
+bg_color = Color(0.2, 0.1, 0.1, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hk7tg"]
+content_margin_left = 4.0
+content_margin_top = 8.0
+content_margin_right = 4.0
+content_margin_bottom = 8.0
+bg_color = Color(0.05, 0, 0, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6e82d"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.175, 0.175, 0.175, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_siivo"]
+
 [resource]
 default_font = ExtResource("1_siivo")
-default_font_size = 32
+default_font_size = 24
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_xtje4")
+Button/styles/disabled = SubResource("StyleBoxFlat_vo7gp")
+Button/styles/hover = SubResource("StyleBoxFlat_pbhmp")
+Button/styles/normal = SubResource("StyleBoxFlat_siivo")
+Button/styles/pressed = SubResource("StyleBoxFlat_hk7tg")
+HBoxContainer/constants/separation = 16
+MarginContainer/constants/margin_bottom = 125
+MarginContainer/constants/margin_left = 350
+MarginContainer/constants/margin_right = 350
+MarginContainer/constants/margin_top = 125
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_6e82d")
+TabContainer/styles/panel = SubResource("StyleBoxEmpty_siivo")
+VBoxContainer/constants/separation = 16

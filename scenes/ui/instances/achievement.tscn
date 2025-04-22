@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://bv62ldhbskfts"]
+
+[ext_resource type="Texture2D" uid="uid://ctoveyygxckqe" path="res://assets/ui/icon.png" id="1_0fbsb"]
+[ext_resource type="Texture2D" uid="uid://cw3luoa1ldo5" path="res://assets/ui/locked.png" id="2_krdap"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_woxfd"]
+
+[node name="Achievement" type="HBoxContainer"]
+offset_right = 173.0
+offset_bottom = 58.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="ColorRect" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("1_0fbsb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="TextureRect" type="TextureRect" parent="ColorRect/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("2_krdap")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Title"
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Description."
+label_settings = SubResource("LabelSettings_woxfd")

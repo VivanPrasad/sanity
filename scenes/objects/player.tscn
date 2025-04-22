@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0rjioj0dy8yu"]
+
+[ext_resource type="Script" uid="uid://i1o4d0k0cm5s" path="res://scripts/objects/player.gd" id="2_2147m"]
+[ext_resource type="Texture2D" uid="uid://bjo6xvwpdgu3n" path="res://assets/ui/cursor.png" id="2_h5uus"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2147m"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("Username:text")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Cursor:modulate")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Player" type="Node2D"]
+script = ExtResource("2_2147m")
+
+[node name="Synchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_2147m")
+
+[node name="Username" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -95.0
+offset_top = -48.0
+offset_right = 96.0
+offset_bottom = -23.0
+grow_horizontal = 2
+text = "Username"
+horizontal_alignment = 1
+
+[node name="Cursor" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_h5uus")

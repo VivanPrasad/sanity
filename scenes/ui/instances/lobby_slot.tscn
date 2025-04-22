@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://bk6ewl6u7bue8"]
+
+[ext_resource type="Texture2D" uid="uid://dmrsma0jntps4" path="res://assets/ui/empty_icon.tres" id="1_0j3dv"]
+[ext_resource type="Script" uid="uid://b404vpmil3gop" path="res://scripts/ui/instances/lobby_slot.gd" id="1_55wkm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfhks"]
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_radius_top_left = 16
+corner_radius_bottom_right = 16
+expand_margin_left = 8.0
+expand_margin_top = 16.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[node name="LobbySlot" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 137)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_bfhks")
+script = ExtResource("1_55wkm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_0j3dv")
+stretch_mode = 3
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add Bot"
+text_overrun_behavior = 3

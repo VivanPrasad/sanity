@@ -1,107 +1,258 @@
-[gd_scene load_steps=6 format=3 uid="uid://c3qqd1lg225pv"]
+[gd_scene load_steps=12 format=3 uid="uid://c3qqd1lg225pv"]
 
 [ext_resource type="Script" uid="uid://bwc8froqqhjt0" path="res://scripts/ui/title.gd" id="1_s1drf"]
 [ext_resource type="Texture2D" uid="uid://cdi7shmro7mo" path="res://assets/ui/title_logo.png" id="1_t6us6"]
 [ext_resource type="Texture2D" uid="uid://dnhdyty8nhij6" path="res://data/particles/texture.tres" id="3_ve8eu"]
 [ext_resource type="Material" uid="uid://bkinvgfdfdlmj" path="res://data/particles/process_material.tres" id="4_yo48d"]
+[ext_resource type="Texture2D" uid="uid://ctoveyygxckqe" path="res://assets/ui/icon.png" id="5_ve8eu"]
+[ext_resource type="PackedScene" uid="uid://cqykohmrm6728" path="res://scenes/ui/settings.tscn" id="7_woxfd"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ve8eu"]
 font_size = 48
 
-[node name="Title" type="Control"]
+[sub_resource type="LabelSettings" id="LabelSettings_n73pj"]
+font_size = 48
+
+[sub_resource type="Animation" id="Animation_woxfd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yo48d"]
+resource_name = "loading_blink"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6667, 1.3333, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.5), Color(1, 1, 1, 0.5), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_woxfd"]
+_data = {
+&"RESET": SubResource("Animation_woxfd"),
+&"loading_blink": SubResource("Animation_yo48d")
+}
+
+[node name="Title" type="Control" node_paths=PackedStringArray("menu_tabs", "particles")]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(640, 360)
 script = ExtResource("1_s1drf")
+menu_tabs = NodePath("Menus")
+particles = NodePath("Particles")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
-
-[node name="TabContainer" type="TabContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-current_tab = 0
-tabs_visible = false
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="TabContainer"]
-position = Vector2(520, 720)
-amount = 50
+[node name="Particles" type="GPUParticles2D" parent="."]
+position = Vector2(620, 720)
+amount = 70
 texture = ExtResource("3_ve8eu")
-lifetime = 2.2
+lifetime = 2.4
 randomness = 0.1
+use_fixed_seed = true
+seed = 510195884
 fixed_fps = 60
 process_material = ExtResource("4_yo48d")
 
-[node name="Main" type="TabBar" parent="TabContainer"]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Main"]
+[node name="Menus" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 300
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 300
-theme_override_constants/margin_bottom = 100
+pivot_offset = Vector2(640, 360)
+current_tab = 4
+tabs_visible = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/MarginContainer"]
+[node name="Main" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Main"]
 layout_mode = 2
 
-[node name="TitleLogo" type="TextureRect" parent="TabContainer/Main/MarginContainer/VBoxContainer"]
+[node name="TitleLogo" type="TextureRect" parent="Menus/Main/VBoxContainer"]
 layout_mode = 2
 texture = ExtResource("1_t6us6")
 stretch_mode = 3
 
-[node name="Buttons" type="VBoxContainer" parent="TabContainer/Main/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Menus/Main/VBoxContainer"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Alpha Edition"
+
+[node name="Buttons" type="VBoxContainer" parent="Menus/Main/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_constants/separation = 16
 
-[node name="NewGame" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+[node name="Play" type="Button" parent="Menus/Main/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Play"
+
+[node name="Achievements" type="Button" parent="Menus/Main/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Achievements"
+
+[node name="Shop" type="Button" parent="Menus/Main/VBoxContainer/Buttons"]
 layout_mode = 2
 disabled = true
-text = "New Game"
+text = "Shop"
 
-[node name="Multiplayer" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+[node name="Settings" type="Button" parent="Menus/Main/VBoxContainer/Buttons"]
 layout_mode = 2
-text = "Multiplayer"
+text = "Settings"
 
-[node name="Config" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
-layout_mode = 2
-text = "Config"
-
-[node name="Exit" type="Button" parent="TabContainer/Main/MarginContainer/VBoxContainer/Buttons"]
+[node name="Exit" type="Button" parent="Menus/Main/VBoxContainer/Buttons"]
 layout_mode = 2
 text = "Exit"
 
-[node name="NewGame" type="TabBar" parent="TabContainer"]
+[node name="Play" type="MarginContainer" parent="Menus"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Multiplayer" type="TabBar" parent="TabContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Play"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/Play/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Game Mode
+"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Buttons" type="VBoxContainer" parent="Menus/Play/VBoxContainer"]
+layout_mode = 2
+
+[node name="Singleplayer" type="Button" parent="Menus/Play/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Singleplayer"
+
+[node name="Multiplayer" type="Button" parent="Menus/Play/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Multiplayer"
+
+[node name="EditProfile" type="Button" parent="Menus/Play/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Edit Character"
+
+[node name="Tutorial" type="Button" parent="Menus/Play/VBoxContainer/Buttons"]
+layout_mode = 2
+disabled = true
+text = "Tutorial"
+
+[node name="Back" type="Button" parent="Menus/Play/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Back"
+
+[node name="Singleplayer" type="MarginContainer" parent="Menus"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Multiplayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Singleplayer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/Singleplayer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Singleplayer
+"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Buttons" type="VBoxContainer" parent="Menus/Singleplayer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NewGame" type="Button" parent="Menus/Singleplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "New Game"
+
+[node name="Continue" type="Button" parent="Menus/Singleplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+disabled = true
+text = "Continue"
+
+[node name="Back" type="Button" parent="Menus/Singleplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Back"
+
+[node name="Multiplayer" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Multiplayer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/Multiplayer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Multiplayer
+"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Buttons" type="VBoxContainer" parent="Menus/Multiplayer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CreateLobby" type="Button" parent="Menus/Multiplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Create"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menus/Multiplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+
+[node name="JoinLobby" type="Button" parent="Menus/Multiplayer/VBoxContainer/Buttons/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Online"
+
+[node name="Local" type="Button" parent="Menus/Multiplayer/VBoxContainer/Buttons/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join Local"
+
+[node name="Back" type="Button" parent="Menus/Multiplayer/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Back"
+
+[node name="CreateLobby" type="TabBar" parent="Menus"]
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="Menus/CreateLobby"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -113,25 +264,340 @@ theme_override_constants/margin_top = 100
 theme_override_constants/margin_right = 300
 theme_override_constants/margin_bottom = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Multiplayer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/CreateLobby/MarginContainer"]
 layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Menus/CreateLobby/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 0
-text = "Multiplayer"
+size_flags_vertical = 6
+text = "Create Game"
 label_settings = SubResource("LabelSettings_ve8eu")
 
-[node name="Buttons" type="VBoxContainer" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer"]
+[node name="SetPassword" type="LineEdit" parent="Menus/CreateLobby/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 6
+placeholder_text = "Set Password (optional)"
+max_length = 16
 
-[node name="Back" type="Button" parent="TabContainer/Multiplayer/MarginContainer/VBoxContainer/Buttons"]
+[node name="Host" type="Button" parent="Menus/CreateLobby/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="Back" type="Button" parent="Menus/CreateLobby/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Back"
 
-[node name="Config" type="TabBar" parent="TabContainer"]
+[node name="JoinLobby" type="MarginContainer" parent="Menus"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+metadata/_tab_index = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/JoinLobby"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Menus/JoinLobby/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Join Game"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="EnterCode" type="LineEdit" parent="Menus/JoinLobby/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Code"
+max_length = 8
+
+[node name="EnterPassword" type="LineEdit" parent="Menus/JoinLobby/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Password"
+
+[node name="Join" type="Button" parent="Menus/JoinLobby/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Join"
+
+[node name="Back" type="Button" parent="Menus/JoinLobby/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="EditProfile" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/EditProfile"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/EditProfile/VBoxContainer"]
+layout_mode = 2
+text = "Character
+"
+label_settings = SubResource("LabelSettings_n73pj")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/EditProfile/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menus/EditProfile/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Username:"
+
+[node name="EnterUsername" type="LineEdit" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter Username"
+max_length = 16
+caret_blink = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Menus/EditProfile/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "Color:"
+vertical_alignment = 1
+
+[node name="EditColor" type="ColorPickerButton" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "edit"
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Menus/EditProfile/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "Icon:"
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("5_ve8eu")
+
+[node name="Button" type="Button" parent="Menus/EditProfile/VBoxContainer/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+text = "Upload"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menus/EditProfile/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Save" type="Button" parent="Menus/EditProfile/VBoxContainer/HBoxContainer"]
+modulate = Color(0.8, 1, 0.8, 1)
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Save"
+
+[node name="Back" type="Button" parent="Menus/EditProfile/VBoxContainer/HBoxContainer"]
+visible = false
+modulate = Color(1, 0.8, 0.8, 1)
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Cancel"
+
+[node name="Achievements" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_bottom = 0
+metadata/_tab_index = 7
+
+[node name="Control" type="Control" parent="Menus/Achievements"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Total" type="Label" parent="Menus/Achievements/Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -23.5
+offset_top = -280.0
+offset_right = 23.5
+offset_bottom = -255.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+text = "(x/x)"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Achievements"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="Menus/Achievements/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Achievements"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menus/Achievements/VBoxContainer"]
+custom_minimum_size = Vector2(0, 500)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Achievements/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Back" type="Button" parent="Menus/Achievements/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="Settings" parent="Menus" instance=ExtResource("7_woxfd")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 8
+
+[node name="Loading" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+metadata/_tab_index = 9
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Loading"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="Menus/Loading/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Loading Game..."
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Menus/Loading/VBoxContainer/Label"]
+libraries = {
+&"": SubResource("AnimationLibrary_woxfd")
+}
+autoplay = "loading_blink"
+
+[node name="JoinError" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+metadata/_tab_index = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/JoinError"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/JoinError/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Can't Join"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Label2" type="Label" parent="Menus/JoinError/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "There was an issue joining the game.
+Check if your code is correct."
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="Menus/JoinError/VBoxContainer"]
+layout_mode = 2
+text = "Back to Menu"
+
+[node name="HostError" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+metadata/_tab_index = 11
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/HostError"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/HostError/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Can't Host"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Label2" type="Label" parent="Menus/HostError/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "There was an issue creating the game.
+Check your network settings, and ensure port forwarding is permitted."
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="Menus/HostError/VBoxContainer"]
+layout_mode = 2
+text = "Back to Menu"
+
+[node name="Disconnect" type="MarginContainer" parent="Menus"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 100
+metadata/_tab_index = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menus/Disconnect"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Menus/Disconnect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Disconnected"
+label_settings = SubResource("LabelSettings_ve8eu")
+
+[node name="Label2" type="Label" parent="Menus/Disconnect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "The game has been closed.
+You have been disconnected."
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="Menus/Disconnect/VBoxContainer"]
+layout_mode = 2
+text = "Back to Menu"
+
+[node name="OutdatedSave" type="AcceptDialog" parent="."]
+title = "Outdated Version"
+initial_position = 2
+size = Vector2i(312, 176)
+ok_button_text = "Okay"
+dialog_text = "Your save file was outdated! 
+ 
+were reset."
