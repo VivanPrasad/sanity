@@ -2,8 +2,7 @@ extends Node
 ## Description: The multiplayer singleton.
 #region *************** References ********************** #
 
-signal thread_complete ## Thread completion signal.
-
+signal thread_complete
 #region **************** Constants ********************** #
 
 const MAX_PLAYERS: int = 5
@@ -24,8 +23,8 @@ var _ip: String = LOCAL_IP
 var ip_code_text: String = _get_code_from_ip(_ip)
 var password_text: String = ""
 
-var _connection_found: bool = false
 var _peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+var _create_game_thread: Thread = Thread.new() ## Host thread
 
 #endregion
 #region ************ Public Variables ******************* #
@@ -68,7 +67,7 @@ func _get_shift_value() -> int:
 
 ## Hosts a multiplayer game. Call this on a thread to
 ## prevent the game from freezing.
-func _create_game_thread() -> void:
+func _create_server() -> void:
 	# UPNP queries take some time.
 	var upnp = UPNP.new()
 	var result: int = upnp.discover()
@@ -77,8 +76,7 @@ func _create_game_thread() -> void:
 	if result != OK:
 		push_error("Multi::host_game() >> Not discovered")
 		push_error(error_string(result))
-		call_deferred("emit_signal",&"thread_complete")
-		call_deferred("_connection_error")
+		call_deferred(&"_create_server_failed")
 		return
 	
 	if upnp.get_gateway() and upnp.get_gateway()\
@@ -89,22 +87,31 @@ func _create_game_thread() -> void:
 		upnp.add_port_mapping(PORT, PORT, desc, "TCP")
 	else:
 		push_error("Multi::host_game() >> Gateway not found")
-		call_deferred("emit_signal",&"thread_complete")
-		call_deferred("_connection_error")
+		call_deferred(&"_create_server_failed")
 		return
 	result = _peer.create_server(PORT,MAX_PLAYERS,MAX_CHANNELS)
 	if result != OK:
-		push_error("Multi::host_game() >> Could not create server")
-		push_error(error_string(result))
-		call_deferred("emit_signal",&"thread_complete")
-		call_deferred("_connection_error")
+		print(error_string(result))
+		call_deferred(&"_create_server_failed")
 		return
 	print("server successfully created!")
 	var ip_code: String = _get_code_from_ip(_ip)
 	prints("> original:",_ip)
 	prints("> retrieved:",_get_ip_from_code(ip_code))
-	_connection_found = true
-	call_deferred("emit_signal",&"thread_complete")
+	call_deferred(&"_create_server_success")
+
+## Handles an unsucessful server creation.
+func _create_server_failed() -> void:
+	print("failed to create server")
+	call_deferred(&"emit_signal",&"thread_complete")
+	log_off(&"HostError")
+
+## Handles a successful creation to a game server.
+func _create_server_success() -> void:
+	print("server created, joining...")
+	call_deferred(&"emit_signal",&"thread_complete")
+	multiplayer.multiplayer_peer = _peer
+	Global.change_scene(Global.Scene.GAME)
 
 ## Handles a successful connection to a game. Joins the
 ## game by changing to the game scene.
@@ -115,7 +122,7 @@ func _connected_to_server() -> void:
 ## Handles when a connection to a game is unsuccessful.
 ## Returns to the title screen with a JoinError.
 func _connection_failed() -> void:
-	print("connection to server failed")
+	print("failed to connect to server")
 	if Multi.is_online(): log_off(&"JoinError")
 
 ## Handles when a client from the host leaves the game.
@@ -172,19 +179,11 @@ func is_online() -> bool:
 
 ## Creates a host attempt thread to enter a lobby.
 func create_game() -> void:
-	_connection_found = false
-	var thread: Thread = Thread.new()
-	thread.start(_create_game_thread,
-		Thread.PRIORITY_NORMAL)
+	_create_game_thread = Thread.new()
+	_create_game_thread.start(
+		_create_server,Thread.PRIORITY_NORMAL)
 	await thread_complete
-	thread.wait_to_finish()
-	
-	if !_connection_found:
-		var main: Title = get_tree().current_scene
-		main.change_menu(&"HostError")
-		return
-	multiplayer.multiplayer_peer = _peer
-	Global.change_scene(Global.Scene.GAME)
+	_create_game_thread.wait_to_finish()
 
 ## Join a multiplayer game from an ip_code.
 func join_game() -> void:
