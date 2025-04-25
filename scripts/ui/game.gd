@@ -4,33 +4,50 @@ class_name Game extends Menu
 ## singleplayer game handling.
 
 #region *************** References ********************** #
+
 @onready var _lobby_slots: GridContainer = \
-	$UI/Menus/HUD/Lobby/VBoxContainer/Slots as GridContainer
+	$UI/Menus/Lobby/VBoxContainer/Slots as GridContainer
 @onready var _players: Node2D = $Players as Node2D
 @onready var _spawner: MultiplayerSpawner = \
 	$Spawner as MultiplayerSpawner
 
-@onready var _lobby_online_ui: Control = $UI/Menus/HUD/Lobby/Code
+@onready var _lobby_online_ui: Control = $UI/Menus/Lobby/VBoxContainer2
 
 @onready var _lobby_code_expiry: Label = \
-	$UI/Menus/HUD/Lobby/Code/VBoxContainer/CodeTimeLeft as Label
+	$UI/Menus/Lobby/VBoxContainer2/CodeTimeLeft as Label
 @onready var _lobby_code: Label = \
-	$UI/Menus/HUD/Lobby/Code/VBoxContainer/Code as Label
+	$UI/Menus/Lobby/VBoxContainer2/Code as Label
+	
+@onready var _start_game_button: Button = \
+	$UI/Menus/Lobby/StartGame as Button
+@onready var spectate_game: Button = \
+	$UI/Menus/Lobby/SpectateGame as Button
+
+@onready var _countdown_label: Label = \
+	$UI/Menus/Lobby/Countdown as Label
+@onready var _start_game_timer: Timer = \
+	$UI/Menus/Lobby/StartGameTimer as Timer
 
 #endregion
 #region **************** Constants ********************** #
+## The Host peer ID (1) constant.
+const HOST_ID: int = 1
+## Lobby clipboard cooldown.
+const CODE_COPY_TIME: float = 5.0
+## Game difficulties.
+enum Difficulty {NORMAL, HARD} 
 
-const HOST_ID: int = 1 ## Host peer ID
 const PLAYER_SCENE: PackedScene = \
 	preload("res://scenes/objects/player.tscn")
-
-const CODE_COPY_TIME: float = 5.0 ## Lobby clipboard cooldown.
-
-enum Difficulty {NORMAL, HARD} ### Game difficulties.
+const COUNTDOWN_TEXT: String = "Starting in %s"
 
 #endregion
 #region ************ Private Variables ****************** #
 
+## The list of player peerIDs, in sync with the
+## _players Node2D tree.
+var _player_list: Array[int] = []
+static var _game_started: bool = false
 #endregion
 #region ************ Public Variables ******************* #
 
@@ -40,12 +57,37 @@ static var difficulty: Difficulty = Difficulty.NORMAL
 #endregion
 #region ************* Private Methods ******************* #
 
+## Starts the game countdown for all players in lobby.
+## The countdown stops if players join or exit.
+@rpc("authority","call_local","reliable")
+func _start_game_countdown() -> void:
+	print("game started for those in the lobby!")
+	_countdown_label.show()
+	_start_game_button.hide()
+	_start_game_timer.start()
+
+## Stops the game countdown for all players.
+@rpc("authority","call_local","reliable")
+func _stop_game_countdown() -> void:
+	if Multi.is_host(): _start_game_button.show()
+	_start_game_timer.stop()
+	_countdown_label.hide()
+
+## Commenses the game, assigns the monster role for those in the lobby.
+## Players that join after this point will have to spectate.
+@rpc("authority","call_local","reliable")
+func _start_game() -> void:
+	_game_started = true
+	$UI.hide()
+
 ## Handles all in-game button UI.
 func _on_button_pressed(button: Button) -> void:
-	Audio.play_sfx(&"select",0.25,randf_range(3.3,3.6))
+	Audio.play_sfx(&"ui_select")
 	match(button.name):
+		&"StartGame": rpc(&"_start_game_countdown")
+		&"SpectateGame": $UI.hide()
 		&"Pause",&"Settings": open_menu(button.name)
-		&"BackToTitle": Multi.log_off()
+		&"MainMenu": Multi.log_off()
 		&"CopyCode":
 			DisplayServer.clipboard_set(
 				Multi._get_code_from_ip(Multi._ip))
@@ -69,75 +111,86 @@ func _connect_all_signals() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 	
 	## Player spawner connections
-	if Multi.is_host():
+	if Multi.is_host() or not Multi.is_online():
 		_add_player()
 		multiplayer.peer_connected.connect(_add_player)
 		multiplayer.peer_disconnected.connect(_remove_player)
+		_start_game_timer.timeout.connect(
+			func(): rpc(&"_start_game"))
 	else:
 		_spawner.spawned.connect(
-			func(_node):_update_lobby_slots())
+			func(_player: Player): _update_lobby_slots())
+		_spawner.despawned.connect(
+			func(_player: Player): _update_lobby_slots())
 
 ## Adds a player object with a given peer ID to the game.
 func _add_player(id: int = HOST_ID) -> void:
 	var new_player: Player = PLAYER_SCENE.instantiate()
 	new_player.name = str(id)
+	_player_list.append(id)
 	_players.add_child(new_player)
 	_update_lobby_slots()
+	rpc(&"_stop_game_countdown")
 
 ## Removes a player object with a given peer ID.
-func _remove_player(_id: int = HOST_ID) -> void:
-	pass
-
-## Allocate the lobby slots for newly spawned players.
-func _update_lobby_slots() -> void:
-	var player_count: int = _players.get_child_count()
-	var player: Player = _players.get_child(
-		player_count - 1)
-	var lobby_slot: VBoxContainer = _lobby_slots.get_child(
-		player.get_index()).get_child(0)
-	var icon: TextureRect = lobby_slot.get_child(0)
-	var button: Button = lobby_slot.get_child(1)
-	button.set_disabled(true)
-	button.set_text(player.username)
-	button.set_tooltip_text(player.username)
-	button.set_modulate(player.color)
-	icon.set_texture(Global.save.icon)
+func _remove_player(id: int) -> void:
+	if Multi.is_host(): 
+		prints("GAME: peer",id,"disconnected!")
+	var index: int = _player_list.find(id)
+	var delete: Player = _players.get_child(index)
 	
-	for slot in _lobby_slots.get_children():
-		button = slot.get_child(0).get_child(1)
-		if slot.get_index() == player_count or \
-				slot.get_index() == 0:
-			button.show()
+	if delete != null:
+		delete.free()
+		_player_list.remove_at(index)
+	_update_lobby_slots()
+	rpc(&"_stop_game_countdown")
+
+## Allocates and deallocates lobby slots for players.
+func _update_lobby_slots() -> void:
+	var index: int = 0
+	var count: int = get_player_count()
+	for lobby_slot: LobbySlot in _lobby_slots\
+			.get_children() as Array[LobbySlot]:
+		if index > count - 1:
+			lobby_slot.clear(count)
+		else: 
+			var player: Player = _players.get_child(index) 
+			lobby_slot.add(player)
+		index += 1
 
 ## Handles which type of game is being played.
 func _handle_game_mode() -> void:
 	if not Multi.is_online(): 
-		print("GAME: you're offline!")
 		_lobby_online_ui.hide()
 		set_process(false)
-	elif Multi.is_host():
-		print("GAME: you're a host!")
+	elif Multi.is_host(): pass
 	elif Multi.is_local():
-		print("GAME: you're a local client!")
 		_lobby_online_ui.hide()
-		set_process(false)
+		_start_game_button.hide()
 	else:
-		print("GAME: you're an online client")
-		
-## Displays the lobby code and expiry text.
+		_start_game_button.hide()
+
+## Displays the lobby code, expiry time, countdown start game.
 func _process(_delta: float) -> void:
 	_lobby_code.text = Multi.get_lobby_code()
 	_lobby_code_expiry.text = Multi.get_code_expiry()
+	_start_game_button.disabled = \
+		_players.get_child_count() < 2
+	_countdown_label.text = COUNTDOWN_TEXT %\
+		ceili(_start_game_timer.time_left)
 
 ## The main initializing function.
 func _ready() -> void:
 	super._ready()
 	_connect_all_signals()
-	open_menu(&"HUD")
+	open_menu(&"Lobby")
 	_handle_game_mode()
-	Audio.play_bgm("the_cave",1.0,0.8)
+	Audio.play_bgm(&"bgm_game")
 
 #endregion
 #region ************* Public Methods ******************** #
 
+## Public method wrapper for internal player node collection.
+func get_player_count() -> int:
+	return _players.get_child_count()
 #endregion

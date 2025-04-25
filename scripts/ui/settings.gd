@@ -14,7 +14,7 @@ enum Tab {AUDIO=0,CONTROLS,DISPLAY,SAVE_DATA}
 #endregion
 #region **************** Variables ********************** #
 
-var _local_save: Save = Global.save.duplicate()
+var _local_save: Save.SettingsData
 var _sliders: Array[HSlider] = []
 var _options: Array[OptionButton] = []
 
@@ -40,8 +40,9 @@ func _on_button_pressed(button: Button) -> void:
 			var is_fullscreen: int = 3 * int(
 				button.button_pressed)
 			DisplayServer.window_set_mode(is_fullscreen)
-			Audio.play_sfx(&"select",0.2,randf_range(3.3,3.6))
-		&"Back",&"Save": _on_settings_closed(button.name == &"Save")
+			Audio.play_sfx(&"ui_select")
+		&"Back",&"Save": _on_settings_closed(
+			button.name == &"Save")
 		_: print("settings::_on_button_pressed() >> \
 			'%s' not handled" % button.name)
 
@@ -60,8 +61,7 @@ func _connect_all_signals() -> void:
 	#Settings menu connections
 	self.visibility_changed.connect(_on_settings_opened)
 	_settings_tabs.tab_changed.connect(
-		func(_tab: int): 
-			Audio.play_sfx(&"select",0.2,randf_range(3.3,3.6)))
+		func(_tab: int): Audio.play_sfx(&"ui_select"))
 	# HSlider connections
 	for slider:HSlider in find_children(
 			"*","HSlider",true) as Array[HSlider]:
@@ -90,6 +90,7 @@ func _connect_all_signals() -> void:
 ## Reverts all slider values to the local save state,
 ## which may differ from the global save file.
 func _revert_settings() -> void:
+	if not get_tree().current_scene is Title: return
 	# Audio
 	for slider:HSlider in _sliders:
 		slider.value = _local_save.audio[slider.name]
@@ -106,19 +107,21 @@ func _revert_settings() -> void:
 ## Creates a local save state of the global save data to
 ## alter the settings menu.
 func _on_settings_opened() -> void:
-	if !visible: return
-	_local_save = Global.save.duplicate()
+	if not visible: return
+	_local_save = Global.save.settings.duplicate()
 
 ## Saves or reverts the changes made in the save menu.
 func _on_settings_closed(is_saved: bool) -> void:
 	if is_saved:
-		Global.save = _local_save.duplicate()
+		Global.save.settings = _local_save.duplicate()
 	else:
-		_local_save = Global.save.duplicate()
+		_local_save = Global.save.settings.duplicate()
 	_revert_settings()
 
 ## The initializing function
 func _ready() -> void:
+	print("creating settings local_save...")
+	_local_save = Global.save.settings.duplicate()
 	_connect_all_signals()
 	_revert_settings()
 	

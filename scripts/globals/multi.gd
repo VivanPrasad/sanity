@@ -3,6 +3,8 @@ extends Node
 #region *************** References ********************** #
 
 signal thread_complete
+
+#endregion
 #region **************** Constants ********************** #
 
 const MAX_PLAYERS: int = 5
@@ -81,10 +83,9 @@ func _create_server() -> void:
 	
 	if upnp.get_gateway() and upnp.get_gateway()\
 			.is_valid_gateway():
-		var desc: Variant = ProjectSettings.get_setting(
-			"application/config/name")
-		upnp.add_port_mapping(PORT, PORT, desc, "UDP")
-		upnp.add_port_mapping(PORT, PORT, desc, "TCP")
+		var desc: String = Global.GAME_NAME
+		upnp.add_port_mapping(PORT,0, desc, "UDP")
+		upnp.add_port_mapping(PORT,0, desc, "TCP")
 	else:
 		push_error("Multi::host_game() >> Gateway not found")
 		call_deferred(&"_create_server_failed")
@@ -167,11 +168,11 @@ func get_lobby_code() -> String:
 
 ## Checks whether the player is a host via multiplayer server.
 func is_host() -> bool:
-	return bool(multiplayer.is_server())
+	return bool(is_online() and multiplayer.is_server())
 
 ## Checks whether the multiplayer peer is for a local connection.
 func is_local() -> bool:
-	return bool(_ip == LOCAL_IP)
+	return bool(is_online() and _ip == LOCAL_IP)
 
 ## Checks whether the multiplayer peer is active (online).
 func is_online() -> bool:

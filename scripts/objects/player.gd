@@ -15,8 +15,8 @@ const SPAWN_POS: Vector2 = Vector2(640,360)
 #endregion
 #region ************ Public Variables ******************* #
 
-var username: String
-var color: Color
+var username: String = "???"
+var color: Color = Color.WHITE
 #endregion
 #region ************* Private Methods ******************* #
 
@@ -30,8 +30,8 @@ func _validate_authority() -> void:
 	if !authority: return
 	
 	set_position(SPAWN_POS)
-	username = Global.save.username
-	color = Global.save.color
+	username = Global.save.user.name
+	color = Global.save.user.color
 	_label.set_text(username)
 	_cursor.set_modulate(color)
 	hide()
@@ -43,6 +43,10 @@ func _ready() -> void:
 ## Tracks the player's mouse position.
 func _physics_process(_delta: float) -> void:
 	set_position(get_global_mouse_position())
+
+func _process(_delta: float) -> void:
+	_label.set_text(username)
+	_cursor.set_modulate(color)
 
 #endregion
 #region ************* Public Methods ******************** #

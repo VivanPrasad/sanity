@@ -1,0 +1,4 @@
+[gd_resource type="SystemFont" format=3 uid="uid://5ggu71lkq0dp"]
+
+[resource]
+font_names = PackedStringArray("Times New Roman")

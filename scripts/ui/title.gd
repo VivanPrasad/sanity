@@ -15,8 +15,6 @@ class_name Title extends Menu
 	$Menus/EditProfile/VBoxContainer/HBoxContainer/Save as Button
 @onready var _achievement_list: VBoxContainer = \
 	$Menus/Achievements/VBoxContainer/ScrollContainer/VBoxContainer as VBoxContainer
-@onready var outdated_save: AcceptDialog = \
-	$OutdatedSave as AcceptDialog
 
 #endregion
 #region **************** Constants ********************** #
@@ -29,23 +27,23 @@ const ACHIEVEMENT_SCENE: PackedScene = \
 
 #endregion
 #region ************* Private Methods ******************* #
-
+	
 ## Method handler for all line editors.
 func _on_line_text_changed(line: LineEdit) -> void:
-	Audio.play_sfx("select",0.2,4.0)
+	Audio.play_sfx(&"ui_type")
 	match(line.name):
 		&"SetPassword":
 			if len(line.text) > 16: return
 			Multi.set_password(line.text)
 		&"EnterCode":
-			_join_button.disabled = (len(line.text) != 8 \
-				or !line.text.is_valid_html_color())
+			_join_button.disabled = bool(len(line.text) != 8 \
+				or not line.text.is_valid_html_color())
 			if _join_button.disabled: return
 			Multi.ip_code_text = line.text
 		&"EnterPassword": Multi.password_text = line.text
 		&"EnterUsername":
 			if (len(line.text) == 0 or len(line.text) > 16) \
-					or !line.text.is_valid_ascii_identifier():
+					or not line.text.is_valid_ascii_identifier():
 				line.set_modulate(Color.RED)
 				_save_button.set_disabled(true)
 				await line.editing_toggled
@@ -58,11 +56,11 @@ func _on_line_text_changed(line: LineEdit) -> void:
 
 ## Method handler for all buttons.
 func _on_button_pressed(button: Button) -> void:
-	Audio.play_sfx(&"select",0.3,randf_range(3.3,3.6))
+	Audio.play_sfx(&"ui_select")
 	match(button.name):
-		&"Play",&"Singleplayer",&"Multiplayer",\
+		&"Singleplayer",&"Multiplayer",\
 		&"Achievements",&"Settings",&"CreateLobby",\
-		&"JoinLobby",&"Shop",&"EditProfile": 
+		&"JoinLobby",&"EditProfile": 
 			open_menu(button.name)
 		&"NewGame": Global.change_scene(Global.Scene.GAME)
 		&"Back",&"Save": 
@@ -71,12 +69,7 @@ func _on_button_pressed(button: Button) -> void:
 		&"Host": open_menu(&"Loading"); Multi.create_game() 
 		&"Join": open_menu(&"Loading"); Multi.join_game()
 		&"Local": open_menu(&"Loading"); Multi.join_local_game()
-		&"Exit": 
-			create_tween().tween_property(
-				menu_tabs,^"modulate:a",0.0,2.5)
-			await create_tween().tween_property(
-				Audio._bgm,^"volume_linear",0.0,4.0).finished
-			Global.quit()
+		&"Exit": exit_game()
 		_: print("title::_on_button_pressed() >> \
 			'%s' not handled" % button.name)
 
@@ -103,7 +96,7 @@ func _connect_all_signals() -> void:
 		line.text_changed.connect(
 			func(_text: String): _on_line_text_changed(line))
 		if line.name == &"EnterUsername": 
-			line.text = Global.save.username
+			line.text = Global.save.user.name
 	
 	# Button connections
 	for button: Button in find_children(
@@ -128,8 +121,8 @@ func _instance_achievements() -> void:
 			"*","Label",true) as Array[Node]
 		textures[0].modulate = achievement.color
 		var completed: int = 0
-		if achievement.title in Global.save.achievements:
-			if Global.save.achievements[achievement.title]:
+		if achievement.title in Global.save.user.achievements:
+			if Global.save.user.achievements[achievement.title]:
 				completed += 1
 				textures[1].set_texture(load(Global.save.CHECK_ICON_PATH))
 		labels[0].text = achievement.title.capitalize()
@@ -140,7 +133,7 @@ func _instance_achievements() -> void:
 
 ## Updates the particle emission and music focus.
 func _update_menu_effects(id: int) -> void:
-	var is_main: bool = !bool(id > 1 and id < 7)
+	var is_main: bool = not bool(id > 1 and id < 7)
 	particles.set_emitting(is_main)
 	Audio.set_bgm_focus(is_main)
 
@@ -151,7 +144,7 @@ func _ready() -> void:
 	_connect_all_signals()
 	_instance_achievements()
 	open_menu(&"Main")
-	Audio.play_bgm(&"midnight_wanderer",.5)
+	Audio.play_bgm(&"bgm_title")
 
 #endregion
 #region ************* Public Methods ******************** #
@@ -170,4 +163,13 @@ func close_menu() -> int:
 	_update_menu_effects(id)
 	return id
 
+## Method handler for exiting the game from the title screen.
+## Fades Audio and screen to black, keeping particles bright.
+func exit_game() -> void:
+	set_process_input(false)
+	create_tween().tween_property(
+				menu_tabs,^"modulate:a",0.0,2.5)
+	await create_tween().tween_property(
+		Audio._bgm,^"volume_linear",0.0,4.0).finished
+	Global.quit()
 #endregion

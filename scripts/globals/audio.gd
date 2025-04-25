@@ -5,16 +5,30 @@ extends Node
 
 #region **************** Constants ********************** #
 
+## Audio folder path.
 const _AUDIO_PATH: String = "res://assets/audio"
-const _AUDIO_FORMAT: String = "ogg" ## Convert to ogg later.
+## Convert to ogg later.
+const _AUDIO_FORMAT: String = "ogg" 
+## The audio data dictionary, containing a reference to
+## [default linear volume, pitch scale] values.
 
-const _SFX_COUNT_LIMIT: int = 8 ## Arbituary SFX limiter
+## All the audio data, with a reference string name keyed to
+## an array where 0: file_name, 1: volume_linear, 2: pitch_scale.
+const _AUDIO_DATA: Dictionary[StringName,Array] = {
+	&"bgm_title":[&"midnight_wanderer",.5,1],
+	&"bgm_game":[&"the_cave",1,.8],
+	&"ui_select":[&"ui_select",0.3,3.4],
+	&"ui_type":[&"ui_select",0.05,4.4],
+}
+## SFX pitch_scale variance range.
+const _SFX_PITCH_VARIANCE: float = 0.2
+const _SFX_COUNT_LIMIT: int = 8 ## Arbituary SFX limiter.
 #endregion
 #region ************ Private Variables ****************** #
 
-var _bgm: AudioStreamPlayer = \
-	AudioStreamPlayer.new() ### BGM handler for music.
-var _sfxs: Node = Node.new() ### get_children() for all sfx.
+## BGM handler for music.
+var _bgm: AudioStreamPlayer = AudioStreamPlayer.new() 
+var _sfxs: Node = Node.new() ## get_children() for all sfx.
 
 #endregion
 #region ************ Public Variables ******************* #
@@ -25,22 +39,29 @@ var _sfxs: Node = Node.new() ### get_children() for all sfx.
 ## The SFX class for sound instancing, freed after playing.
 class SFX:
 	extends AudioStreamPlayer
-	func _init(file_name: StringName, 
-			volume: float, pitch: float) -> void:
-		self.stream = Audio._load_audio(file_name, &"sfx")
-		self.name = "%s%s" % [file_name,self.get_index()]
-		self.volume_linear = volume
-		self.pitch_scale = pitch
+	## Gets the random value from the SFX pitch_scale range
+	## given with the interval [x - 0.3,x + 0.3].
+	func _get_sfx_pitch(pitch: float) -> float:
+		return randf_range(
+			pitch - _SFX_PITCH_VARIANCE,
+			pitch + _SFX_PITCH_VARIANCE)
+	## SFX initializing function with a given sfx_name.
+	func _init(sfx_name: StringName) -> void:
+		self.stream = Audio._load_audio(sfx_name, &"sfx")
+		self.volume_linear = _AUDIO_DATA[sfx_name][1]
+		self.pitch_scale = _get_sfx_pitch(
+			_AUDIO_DATA[sfx_name][2])
 		self.bus = &"SFX"
 		self.autoplay = true
-		self.finished.connect(func(): queue_free())
+		self.finished.connect(queue_free)
 
 #endregion
 #region ************* Private Methods ******************* #
 
-## Loads audio from a given file_name and bgm/sfx/amb.
-func _load_audio(file_name: StringName, 
+## Loads audio from a given audio_name and bgm/sfx/amb.
+func _load_audio(audio_name: StringName, 
 		type: StringName) -> AudioStreamOggVorbis:
+	var file_name: String = _AUDIO_DATA[audio_name][0]
 	var path: String = "%s/%s/%s.%s" % \
 		[_AUDIO_PATH,type,file_name,_AUDIO_FORMAT]
 	var file: AudioStreamOggVorbis = \
@@ -64,11 +85,10 @@ func _ready() -> void:
 #region ************* Public Methods ******************** #
 
 ## Plays a bgm track from a given StringName.
-func play_bgm(bgm_name: StringName, 
-		volume: float = 1.0, pitch: float = 1.0) -> void:
+func play_bgm(bgm_name: StringName) -> void:
 	_bgm.set_stream(_load_audio(bgm_name,&"bgm"))
-	_bgm.volume_linear = volume
-	_bgm.pitch_scale = pitch
+	_bgm.volume_linear = _AUDIO_DATA[bgm_name][1]
+	_bgm.pitch_scale = _AUDIO_DATA[bgm_name][2]
 	_bgm.play()
 
 ## Stops the current bgm playing.
@@ -85,10 +105,9 @@ func is_bgm_playing() -> bool:
 	return bool(_bgm.is_playing())
 
 ## Plays a sfx clip from a given StringName.
-func play_sfx(sfx_name: StringName, 
-		volume: float = 1.0, pitch: float = 1.0) -> void:
+func play_sfx(sfx_name: StringName) -> void:
 	if _sfxs.get_child_count() > _SFX_COUNT_LIMIT: return
-	var sfx: SFX = SFX.new(sfx_name,volume,pitch)
+	var sfx: SFX = SFX.new(sfx_name)
 	_sfxs.add_child(sfx)
 
 ## Sets the volume of an Audio Bus (Master, BGM, SFX, AMB).

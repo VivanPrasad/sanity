@@ -5,14 +5,15 @@
 [ext_resource type="PackedScene" uid="uid://bk6ewl6u7bue8" path="res://scenes/ui/instances/lobby_slot.tscn" id="4_5mgl0"]
 [ext_resource type="Texture2D" uid="uid://dnhdyty8nhij6" path="res://data/particles/texture.tres" id="4_lakwo"]
 [ext_resource type="Material" uid="uid://bkinvgfdfdlmj" path="res://data/particles/process_material.tres" id="5_5mgl0"]
+[ext_resource type="SystemFont" uid="uid://5ggu71lkq0dp" path="res://assets/fonts/times_new_roman.tres" id="5_xafdj"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_lakwo"]
+properties/0/path = NodePath(".:_game_started")
+properties/0/spawn = true
+properties/0/replication_mode = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_bfhks"]
 font_size = 48
-
-[sub_resource type="SystemFont" id="SystemFont_lakwo"]
-font_names = PackedStringArray("Arial")
 
 [sub_resource type="LabelSettings" id="LabelSettings_21b1b"]
 font_size = 32
@@ -98,125 +99,113 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(640, 360)
-current_tab = 0
+current_tab = 2
 tabs_visible = false
 
-[node name="HUD" type="Control" parent="UI/Menus"]
+[node name="Lobby" type="MarginContainer" parent="UI/Menus"]
+visible = false
 layout_mode = 2
-mouse_filter = 1
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 144
 metadata/_tab_index = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Menus/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="Pause" type="Button" parent="UI/Menus/HUD/MarginContainer"]
+[node name="Pause" type="Button" parent="UI/Menus/Lobby"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Menu"
 
-[node name="Lobby" type="Control" parent="UI/Menus/HUD"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 104.0
-offset_top = 30.0
-offset_right = -104.0
-offset_bottom = -30.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Menus/HUD/Lobby"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 32
-alignment = 1
-
-[node name="Label" type="Label" parent="UI/Menus/HUD/Lobby/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Menus/Lobby"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 96
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/Menus/Lobby/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
 text = "Lobby"
 label_settings = SubResource("LabelSettings_bfhks")
 
-[node name="Slots" type="GridContainer" parent="UI/Menus/HUD/Lobby/VBoxContainer"]
+[node name="Slots" type="GridContainer" parent="UI/Menus/Lobby/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 0
 theme_override_constants/h_separation = 32
 theme_override_constants/v_separation = 32
 columns = 6
 
-[node name="LobbySlot" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="LobbySlot2" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot2" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="LobbySlot3" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot3" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="LobbySlot4" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot4" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="LobbySlot5" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot5" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="LobbySlot6" parent="UI/Menus/HUD/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
+[node name="LobbySlot6" parent="UI/Menus/Lobby/VBoxContainer/Slots" instance=ExtResource("4_5mgl0")]
 layout_mode = 2
 
-[node name="Code" type="Control" parent="UI/Menus/HUD/Lobby"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Menus/HUD/Lobby/Code"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -112.0
-offset_top = -82.0
-offset_right = 112.0
-grow_horizontal = 2
-grow_vertical = 0
-alignment = 2
-
-[node name="Code" type="Label" parent="UI/Menus/HUD/Lobby/Code/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Menus/Lobby"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_fonts/font = SubResource("SystemFont_lakwo")
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="Code" type="Label" parent="UI/Menus/Lobby/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("5_xafdj")
 text = "Lobby Code: %s"
 
-[node name="CopyCode" type="Button" parent="UI/Menus/HUD/Lobby/Code/VBoxContainer"]
+[node name="CodeTimeLeft" type="Label" parent="UI/Menus/Lobby/VBoxContainer2"]
+modulate = Color(1, 1, 1, 0.3)
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("5_xafdj")
+theme_override_font_sizes/font_size = 18
+text = "Expires in: %sm%ss"
+
+[node name="CopyCode" type="Button" parent="UI/Menus/Lobby/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
 text = "Copy Code"
 
-[node name="CodeTimeLeft" type="Label" parent="UI/Menus/HUD/Lobby/Code/VBoxContainer"]
+[node name="StartGame" type="Button" parent="UI/Menus/Lobby"]
+visible = false
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_lakwo")
-text = "Expires in: %sm%ss"
-horizontal_alignment = 1
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Start Game"
+
+[node name="SpectateGame" type="Button" parent="UI/Menus/Lobby"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Spectate"
+
+[node name="Countdown" type="Label" parent="UI/Menus/Lobby"]
+visible = false
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Starting in %s"
+vertical_alignment = 1
+
+[node name="StartGameTimer" type="Timer" parent="UI/Menus/Lobby"]
+wait_time = 5.0
 
 [node name="Pause" type="Control" parent="UI/Menus"]
 visible = false
@@ -275,12 +264,11 @@ text = "Continue"
 layout_mode = 2
 text = "Settings"
 
-[node name="BackToTitle" type="Button" parent="UI/Menus/Pause/Panel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="MainMenu" type="Button" parent="UI/Menus/Pause/Panel/MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Back to Title"
+text = "MainMenu"
 
 [node name="Settings" parent="UI/Menus" instance=ExtResource("2_nbrst")]
-visible = false
 layout_mode = 2
 mouse_filter = 1
 metadata/_tab_index = 2

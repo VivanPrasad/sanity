@@ -84,6 +84,7 @@ func close_menu() -> int:
 	_menu_fade(false)
 	return id
 
+## Closes and opens a new menu (replacing the current menu).
 func change_menu(menu_name: StringName) -> int:
 	close_menu()
 	return open_menu(menu_name)
