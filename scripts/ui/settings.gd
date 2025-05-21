@@ -14,7 +14,7 @@ enum Tab {AUDIO=0,CONTROLS,DISPLAY,SAVE_DATA}
 #endregion
 #region **************** Variables ********************** #
 
-var _local_save: Save.SettingsData
+var _local_save: SettingsData
 var _sliders: Array[HSlider] = []
 var _options: Array[OptionButton] = []
 
@@ -61,7 +61,7 @@ func _connect_all_signals() -> void:
 	#Settings menu connections
 	self.visibility_changed.connect(_on_settings_opened)
 	_settings_tabs.tab_changed.connect(
-		func(_tab: int): Audio.play_sfx(&"ui_select"))
+		func(_tab: int) -> void: Audio.play_sfx(&"ui_select"))
 	# HSlider connections
 	for slider:HSlider in find_children(
 			"*","HSlider",true) as Array[HSlider]:
@@ -69,7 +69,7 @@ func _connect_all_signals() -> void:
 		slider.step = 0.05
 		slider.value = _local_save.audio[slider.name]
 		slider.value_changed.connect(
-			func(_value: float): 
+			func(_value: float) -> void: 
 				_on_slider_value_changed(slider))
 		_sliders.append(slider)
 	# Button connections
@@ -80,7 +80,7 @@ func _connect_all_signals() -> void:
 		if button is OptionButton:
 			var option: OptionButton = button as OptionButton
 			option.item_selected.connect(
-				func(_index: int): 
+				func(_index: int) -> void: 
 					_on_option_selected(option))
 			_options.append(option)
 		else:
@@ -122,6 +122,7 @@ func _on_settings_closed(is_saved: bool) -> void:
 func _ready() -> void:
 	print("creating settings local_save...")
 	_local_save = Global.save.settings.duplicate()
+	_settings_tabs.set_current_tab(0)
 	_connect_all_signals()
 	_revert_settings()
 	

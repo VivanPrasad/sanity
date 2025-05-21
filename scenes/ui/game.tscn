@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cxl21iihgx6fp" path="res://scripts/ui/game.gd" id="1_21b1b"]
 [ext_resource type="PackedScene" uid="uid://cqykohmrm6728" path="res://scenes/ui/settings.tscn" id="2_nbrst"]
-[ext_resource type="PackedScene" uid="uid://bk6ewl6u7bue8" path="res://scenes/ui/instances/lobby_slot.tscn" id="4_5mgl0"]
+[ext_resource type="PackedScene" uid="uid://bk6ewl6u7bue8" path="res://scenes/ui/instances/player_slot.tscn" id="4_5mgl0"]
 [ext_resource type="Texture2D" uid="uid://dnhdyty8nhij6" path="res://data/particles/texture.tres" id="4_lakwo"]
 [ext_resource type="Material" uid="uid://bkinvgfdfdlmj" path="res://data/particles/process_material.tres" id="5_5mgl0"]
 [ext_resource type="SystemFont" uid="uid://5ggu71lkq0dp" path="res://assets/fonts/times_new_roman.tres" id="5_xafdj"]
@@ -75,6 +75,10 @@ spawn_limit = 6
 [node name="Synchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_lakwo")
 
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0, 0.0324125, 1, 1)
+polygon = PackedVector2Array(812, 245, 577, 236, 569, 386, 833, 397)
+
 [node name="Players" type="Node2D" parent="."]
 
 [node name="Particles" type="GPUParticles2D" parent="."]
@@ -90,7 +94,7 @@ fixed_fps = 60
 process_material = ExtResource("5_5mgl0")
 
 [node name="UI" type="CanvasLayer" parent="."]
-layer = -1
+layer = 0
 
 [node name="Menus" type="TabContainer" parent="UI"]
 anchors_preset = 15

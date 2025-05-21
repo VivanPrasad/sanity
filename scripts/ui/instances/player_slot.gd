@@ -1,5 +1,5 @@
-class_name LobbySlot extends PanelContainer
-## The base LobbySlot class. [br]
+class_name PlayerSlot extends PanelContainer
+## The base PlayerSlot class. [br]
 
 #region *************** References ********************** #
 
@@ -41,7 +41,7 @@ func add(player: Player) -> void:
 	_icon.set_texture(GAME_ICON)
 	_button.show()
 
-func clear(count) -> void:
+func clear(count: int) -> void:
 	set_process(false)
 	_button.text = DEFAULT_TEXT
 	_button.set_disabled(false)

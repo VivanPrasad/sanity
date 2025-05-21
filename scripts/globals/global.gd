@@ -1,4 +1,4 @@
-extends Node
+class_name GlobalSingleton extends Node
 ## Description: The global singleton.
 ## Contains save data, scene handling, and utitility methods.
 
@@ -9,7 +9,9 @@ extends Node
 
 ## All the achievement data to be displayed in the
 ## achievements menu. Internal data, not the save data.
+## Initializes the achievement list objects.
 var AchievementList: Array[Achievement] = [
+	Achievement.new("start_with_sanity","Open the game for the first time.",Color.AQUA),
 	Achievement.new("it_begins","Start a singleplayer game."),
 	Achievement.new("we_shall_go_together","Complete a game as a survivor."),
 	Achievement.new("together_once_more","Complete a multiplayer game."),
@@ -19,9 +21,9 @@ var AchievementList: Array[Achievement] = [
 	Achievement.new("lone_survivor","Win a game as the only survivor remaining.",Color.YELLOW),
 	Achievement.new("bunker_trinity","Hold all 3 bunker items at once.",Color.YELLOW),
 	Achievement.new("this_is_a_robbery","Kill the merchant as a monster to obtain a cursed item.",Color.ORANGE),
-	Achievement.new("delulu_is_not_the_solulu","Recover from insanity.",Color.ORANGE), 
+	Achievement.new("delulu_is_not_the_solulu","Recover from insanity.",Color.ORANGE),
 	Achievement.new("im_the_bad_guy","Win a game as a monster.",Color.ORANGE),
-	Achievement.new("the_imposter","Lose a game as a survivor with the 'killer' trait.",Color.RED), 
+	Achievement.new("the_imposter","Lose a game as a survivor with the 'killer' trait.",Color.RED),
 	Achievement.new("feel_the_heat","Complete a game as an infected survivor.",Color.RED),
 	Achievement.new("last_prayers","Succeed on the final ritual doomsday.",Color.DARK_RED),
 	Achievement.new("ao_oni","Win a game after being transformed into a monster.",Color.DARK_RED),
@@ -34,18 +36,6 @@ const GAME_NAME: String = "Sanity"
 #region ***************** Classes *********************** #
 
 ## The achievement class for handling achievement data.
-class Achievement:
-	var title: String ## The title of the achievement.
-	var desc: String ## A description on how to complete the achievement.
-	## The difficulty of the achievement as a color gradient
-	## from white to dark red (easy to challenging).
-	var color: Color = Color.WHITE
-	@warning_ignore("shadowed_variable")
-	func _init(title: String, desc: String, 
-			color: Color= Color.WHITE) -> void:
-		self.title = title
-		self.desc = desc
-		self.color = color
 
 ## The scene collection class.
 class Scene:
@@ -83,6 +73,7 @@ func change_scene(scene_path: String) -> Signal:
 	
 ## Quits the game executable without confirmation.
 func quit() -> void:
+	get_tree().auto_accept_quit = false
 	get_tree().quit()
 
 ## Returns the timeout signal of a new timer object. The 
@@ -90,4 +81,10 @@ func quit() -> void:
 func wait(seconds: float = 1.0) -> Signal:
 	return get_tree().create_timer(seconds).timeout
 
+## Returns the finished signal of a new tween object.
+## This method is an adapter for the tween_property method.
+func tween(object: Object, property: NodePath,
+		to: Variant, duration: float = 1.0) -> Signal:
+	return create_tween().tween_property(
+		object,property,to,duration).finished
 #endregion

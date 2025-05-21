@@ -116,12 +116,12 @@ func _connect_all_signals() -> void:
 		multiplayer.peer_connected.connect(_add_player)
 		multiplayer.peer_disconnected.connect(_remove_player)
 		_start_game_timer.timeout.connect(
-			func(): rpc(&"_start_game"))
+			func() -> void: rpc(&"_start_game"))
 	else:
 		_spawner.spawned.connect(
-			func(_player: Player): _update_lobby_slots())
+			func(_player: Player) -> void: _update_lobby_slots())
 		_spawner.despawned.connect(
-			func(_player: Player): _update_lobby_slots())
+			func(_player: Player) -> void: _update_lobby_slots())
 
 ## Adds a player object with a given peer ID to the game.
 func _add_player(id: int = HOST_ID) -> void:
@@ -149,8 +149,8 @@ func _remove_player(id: int) -> void:
 func _update_lobby_slots() -> void:
 	var index: int = 0
 	var count: int = get_player_count()
-	for lobby_slot: LobbySlot in _lobby_slots\
-			.get_children() as Array[LobbySlot]:
+	for lobby_slot: PlayerSlot in _lobby_slots\
+			.get_children() as Array[PlayerSlot]:
 		if index > count - 1:
 			lobby_slot.clear(count)
 		else: 

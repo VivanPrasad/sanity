@@ -13,6 +13,9 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath(".:color")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath("Cursor:position")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="Player" type="Node2D"]
 script = ExtResource("2_2147m")
@@ -20,18 +23,20 @@ script = ExtResource("2_2147m")
 [node name="Synchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_2147m")
 
-[node name="Username" type="Label" parent="."]
+[node name="Cursor" type="Sprite2D" parent="."]
+texture = ExtResource("2_h5uus")
+
+[node name="Username" type="Label" parent="Cursor"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -95.0
+offset_left = -101.0
 offset_top = -48.0
-offset_right = 96.0
+offset_right = 90.0
 offset_bottom = -23.0
 grow_horizontal = 2
 text = "???"
 horizontal_alignment = 1
 
-[node name="Cursor" type="Sprite2D" parent="."]
-texture_filter = 1
-texture = ExtResource("2_h5uus")
+[node name="Camera" type="Camera2D" parent="."]
+enabled = false

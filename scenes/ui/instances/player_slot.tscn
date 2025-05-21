@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bk6ewl6u7bue8"]
 
 [ext_resource type="Texture2D" uid="uid://dmrsma0jntps4" path="res://assets/ui/empty_icon.tres" id="1_0j3dv"]
-[ext_resource type="Script" uid="uid://b404vpmil3gop" path="res://scripts/ui/instances/lobby_slot.gd" id="1_55wkm"]
+[ext_resource type="Script" uid="uid://b404vpmil3gop" path="res://scripts/ui/instances/player_slot.gd" id="1_55wkm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfhks"]
 bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)

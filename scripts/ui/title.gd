@@ -19,8 +19,8 @@ class_name Title extends Menu
 #endregion
 #region **************** Constants ********************** #
 
-const ACHIEVEMENT_SCENE: PackedScene = \
-	preload("res://scenes/ui/instances/achievement.tscn")
+const _ACHIEVEMENT_SCENE: PackedScene = \
+	preload("res://scenes/ui/instances/achievement_slot.tscn")
 
 #endregion
 #region **************** Variables ********************** #
@@ -34,7 +34,7 @@ func _on_line_text_changed(line: LineEdit) -> void:
 	match(line.name):
 		&"SetPassword":
 			if len(line.text) > 16: return
-			Multi.set_password(line.text)
+			Multi.password_text = line.text
 		&"EnterCode":
 			_join_button.disabled = bool(len(line.text) != 8 \
 				or not line.text.is_valid_html_color())
@@ -47,9 +47,9 @@ func _on_line_text_changed(line: LineEdit) -> void:
 				line.set_modulate(Color.RED)
 				_save_button.set_disabled(true)
 				await line.editing_toggled
-				line.text = Global.save.username
+				line.text = Global.save.user.name
 			_save_button.set_disabled(false)
-			Global.save.username = line.text
+			Global.save.user.name = line.text
 			line.set_modulate(Color.WHITE)
 		_: print("title::_on_line_text_changed() >> \
 			'%s' not handled" % line.name)
@@ -86,7 +86,7 @@ func _configure_color_picker(
 	picker.hex_visible = false
 	picker.presets_visible = false
 	picker.color_changed.connect(
-		func(color: Color): Global.save.color = color)
+		func(color: Color) -> void: Global.save.user.color = color)
 
 ## Connect all signals (buttons, etc.) in the title screen.
 func _connect_all_signals() -> void:
@@ -94,7 +94,7 @@ func _connect_all_signals() -> void:
 	for line: LineEdit in find_children(
 			"*","LineEdit",true) as Array[LineEdit]:
 		line.text_changed.connect(
-			func(_text: String): _on_line_text_changed(line))
+			func(_text: String) -> void: _on_line_text_changed(line))
 		if line.name == &"EnterUsername": 
 			line.text = Global.save.user.name
 	
@@ -111,23 +111,12 @@ func _connect_all_signals() -> void:
 ## Populate the achievement list in the achievement menu
 ## with the achievement scene templates.
 func _instance_achievements() -> void:
-	for achievement: Global.Achievement in \
+	var completed: int = 0
+	for achievement: Achievement in \
 			Global.AchievementList:
-		var scene:= ACHIEVEMENT_SCENE.instantiate()
+		var scene: AchievementSlot = _ACHIEVEMENT_SCENE.instantiate()
 		_achievement_list.add_child(scene)
-		var textures: Array[Node] = scene.find_children(
-			"*","TextureRect",true) as Array[Node]
-		var labels: Array[Node] = scene.find_children(
-			"*","Label",true) as Array[Node]
-		textures[0].modulate = achievement.color
-		var completed: int = 0
-		if achievement.title in Global.save.user.achievements:
-			if Global.save.user.achievements[achievement.title]:
-				completed += 1
-				textures[1].set_texture(load(Global.save.CHECK_ICON_PATH))
-		labels[0].text = achievement.title.capitalize()
-		labels[1].text = achievement.desc
-	
+		if achievement.unlocked: completed += 1
 		_total_achievements_label.text = "%s/%s Completed" % \
 			[completed,len(Global.AchievementList)]
 
@@ -144,7 +133,7 @@ func _ready() -> void:
 	_connect_all_signals()
 	_instance_achievements()
 	open_menu(&"Main")
-	Audio.play_bgm(&"bgm_title")
+	Audio.play_bgm(&"bgm_title",4.0)
 
 #endregion
 #region ************* Public Methods ******************** #
@@ -167,9 +156,7 @@ func close_menu() -> int:
 ## Fades Audio and screen to black, keeping particles bright.
 func exit_game() -> void:
 	set_process_input(false)
-	create_tween().tween_property(
-				menu_tabs,^"modulate:a",0.0,2.5)
-	await create_tween().tween_property(
-		Audio._bgm,^"volume_linear",0.0,4.0).finished
+	Global.tween(menu_tabs,^"modulate:a",0.0,2.5)
+	await Audio.stop_bgm(4.0)
 	Global.quit()
 #endregion

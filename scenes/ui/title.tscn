@@ -85,10 +85,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(640, 360)
-current_tab = 0
+current_tab = 6
 tabs_visible = false
 
 [node name="Main" type="MarginContainer" parent="Menus"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -376,7 +377,6 @@ layout_mode = 2
 text = "Cancel"
 
 [node name="Achievements" type="MarginContainer" parent="Menus"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_bottom = 0

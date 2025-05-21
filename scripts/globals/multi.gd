@@ -1,4 +1,4 @@
-extends Node
+class_name MultiSingleton extends Node
 ## Description: The multiplayer singleton.
 #region *************** References ********************** #
 
@@ -36,26 +36,26 @@ var _create_game_thread: Thread = Thread.new() ## Host thread
 
 ## Returns a code from an IP.
 func _get_code_from_ip(ip_text:String) -> String:
-	var values = ip_text.split(".")
+	var values: PackedStringArray = ip_text.split(".")
 	var code_color : Color = Color(
 		float((values[0].to_int()+_get_shift_value())/255.0),
 		float((values[1].to_int()+_get_shift_value())/255.0),
 		float((values[2].to_int()+_get_shift_value())/255.0),
 		float((values[3].to_int()+_get_shift_value())/255.0)
 	)
-	var ciphered = code_color.to_html()
+	var ciphered: String = code_color.to_html()
 	return ciphered
 	
 ## Returns IP from a code.
 func _get_ip_from_code(code: String) -> String:
 	var code_color: Color = Color(code.to_lower())
-	var code_arr = [
+	var code_arr: Array[int] = [
 		int(code_color.r*255.0-(_get_shift_value())),
 		int(code_color.g*255.0-(_get_shift_value())),
 		int(code_color.b*255.0-(_get_shift_value())),
 		int(code_color.a*255.0-(_get_shift_value()))
 	]
-	var deciphered = ".".join(code_arr)
+	var deciphered: String  = ".".join(code_arr)
 	return deciphered
 
 ## Gets a semi-unique value from time.
@@ -71,7 +71,7 @@ func _get_shift_value() -> int:
 ## prevent the game from freezing.
 func _create_server() -> void:
 	# UPNP queries take some time.
-	var upnp = UPNP.new()
+	var upnp: UPNP = UPNP.new()
 	var result: int = upnp.discover()
 	_ip = upnp.query_external_address()
 	
